@@ -5,6 +5,7 @@ import (
 	"errors"
 	"golang-restApi/config"
 	"golang-restApi/helper"
+	"golang-restApi/helper/validators"
 	"golang-restApi/models"
 	"net/http"
 	"strconv"
@@ -18,18 +19,16 @@ func IndexAuthor(w http.ResponseWriter, r *http.Request) {
 	var author []models.Author
 
 	if err := config.DB.Find(&author).Error; err != nil {
-		helper.Response(w, 200, err.Error(), nil)
-
+		helper.Response(w, 500, err.Error(), nil)
+		return
 	}
 
-	helper.Response(w, 200, "List Authors", author)
+	helper.Response(w, 200, "list author", author)
 }
 
 // Create
 func CreateAuthor(w http.ResponseWriter, r *http.Request) {
 	var author models.Author
-	var existingEmail models.Author
-	var existingName models.Author
 
 	if err := json.NewDecoder(r.Body).Decode(&author); err != nil {
 		helper.Response(w, 500, err.Error(), nil)
@@ -38,32 +37,9 @@ func CreateAuthor(w http.ResponseWriter, r *http.Request) {
 
 	defer r.Body.Close()
 
-	if author.Name == "" {
-		helper.Response(w, 400, "name is required", nil)
-		return
-	}
-
-	if author.Email == "" {
-		helper.Response(w, 400, "email is required", nil)
-		return
-	}
-
-	if author.Age == 0 {
-		helper.Response(w, 400, "age is required and more than 0", nil)
-		return
-	}
-
-	if author.Gender == "" {
-		helper.Response(w, 400, "gender is required", nil)
-	}
-
-	if err := config.DB.Where("name = ?", author.Name).First(&existingName).Error; err == nil {
-		helper.Response(w, 400, "Name already exists", nil)
-		return
-	}
-
-	if err := config.DB.Where("email = ?", author.Email).First(&existingEmail).Error; err == nil {
-		helper.Response(w, 400, "Email already exists", nil)
+	// jalankan validasi
+	if err := validators.CreateValidateAuthor(&author); err != nil {
+		helper.Response(w, 400, err.Error(), nil)
 		return
 	}
 
@@ -118,32 +94,9 @@ func UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	if input.Name == "" {
-		helper.Response(w, 400, "name is required", nil)
-		return
-	}
-	if input.Email == "" {
-		helper.Response(w, 400, "email is required", nil)
-		return
-	}
-	if input.Age <= 0 {
-		helper.Response(w, 400, "age is required and must be greater than 0", nil)
-		return
-	}
-	if input.Gender == "" {
-		helper.Response(w, 400, "gender is required", nil)
-		return
-	}
-
-	var existingName models.Author
-	if err := config.DB.Where("name = ? AND id != ?", input.Name, id).First(&existingName).Error; err == nil {
-		helper.Response(w, 400, "name already exists", nil)
-		return
-	}
-
-	var existingEmail models.Author
-	if err := config.DB.Where("email = ? AND id != ?", input.Email, id).First(&existingEmail).Error; err == nil {
-		helper.Response(w, 400, "email already exists", nil)
+	// validasi
+	if err := validators.UpdateValidateAuthor(author.ID, &input); err != nil {
+		helper.Response(w, 400, err.Error(), nil)
 		return
 	}
 
