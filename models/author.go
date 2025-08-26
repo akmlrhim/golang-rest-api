@@ -17,5 +17,4 @@ type AuthorBookResponse struct {
 	Name   string `json:"name"`
 	Gender string `json:"gender"`
 	Email  string `json:"email"`
-	Age    int    `json:"age"`
 }

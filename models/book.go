@@ -17,6 +17,16 @@ type Book struct {
 	Author Author `gorm:"foreignKey:AuthorID" json:"author"`
 }
 
-type BookResponse struct{
-	
+type BookResponse struct {
+	ID            uint               `json:"id"`
+	AuthorID      uint               `json:"-"`
+	Author        AuthorBookResponse `gorm:"foreignKey:AuthorID" json:"author"`
+	Title         string             `json:"title"`
+	Description   string             `json:"description"`
+	PublishedYear string             `json:"published_year"`
+	Published     string             `json:"published"`
+	Pages         string             `json:"pages"`
+	ISBN          string             `json:"isbn"`
+	CreatedAt     time.Time          `json:"created_at"`
+	UpdatedAt     time.Time          `json:"updated_at"`
 }

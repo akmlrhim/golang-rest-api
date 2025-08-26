@@ -48,7 +48,7 @@ func CreateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Response(w, 201, "success created author", author)
+	helper.Response(w, 201, "success created author", nil)
 }
 
 // Detail
@@ -100,12 +100,8 @@ func UpdateAuthor(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	author.Name = input.Name
-	author.Email = input.Email
-	author.Age = input.Age
-	author.Gender = input.Gender
-
-	if err := config.DB.Save(&author).Error; err != nil {
+	// update hanya field yang ada di input (dan tidak kosong)
+	if err := config.DB.Model(&author).Updates(input).Error; err != nil {
 		helper.Response(w, 500, err.Error(), nil)
 		return
 	}
