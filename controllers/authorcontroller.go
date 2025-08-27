@@ -117,6 +117,13 @@ func DeleteAuthor(w http.ResponseWriter, r *http.Request) {
 
 	var author models.Author
 
+	var count int64
+	config.DB.Model(&models.Book{}).Where("author_id = ?", id).Count(&count)
+	if count > 0 {
+		helper.Response(w, 400, "Tidak bisa menghapus penulis karena masih memiliki buku", nil)
+		return
+	}
+
 	res := config.DB.Delete(&author, id)
 
 	if res.Error != nil {
