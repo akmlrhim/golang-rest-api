@@ -42,6 +42,10 @@ Jangan lupa untuk mengimport database golang_rest_api.sql ke database terlebih d
 atau anda bisa membuat database dan menyesuaikan
 ```
 
+```bash
+BASE_URL : "http:127.0.0.1:9000"
+```
+
 ##### Gunakan postman collection ini untuk melakukan testing terhadap setiap endpoint
 
 > ```bash
