@@ -37,8 +37,13 @@ gorm.io/gorm v1.30.1
 Golang Version : go version go1.23.4 windows/amd64
 ```
 
-#### Postman Collection
-#### Gunakan ini untuk melakukan testing terhadap setiap endpoint
+```bash
+Jangan lupa untuk mengimport database golang_rest_api.sql ke database terlebih dahulu
+atau anda bisa membuat database dan menyesuaikan
+```
+
+##### Gunakan postman collection ini untuk melakukan testing terhadap setiap endpoint
+
 > ```bash
 > https://web.postman.co/workspace/My-Workspace~636da315-a9df-45ae-8734-660d0febe959/collection/31413674-67d50246-c5be-4d1e-bb45-3b27f2ccd890?action=share&source=copy-link&creator=31413674
 > ```
